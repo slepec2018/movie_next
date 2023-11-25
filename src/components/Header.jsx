@@ -10,9 +10,9 @@ export default function Header() {
         <MenuItem title="HOME" address="/" Icon={AiFillHome} />
         <MenuItem title="ABOUT" address="/about" Icon={BsFillInfoCircleFill} />
       </div>
-      <div className="">
+      <div>
         <Link href="/">
-          <h2 className="text-2xl">
+          <h2 className="text-2xl flex items-center">
             <span className="font-bold bg-amber-500 py-1 px-2 rounded-lg mr-1">IMBb</span>
             <span className="text-xl hidden sm:inline">Test</span>
           </h2>
