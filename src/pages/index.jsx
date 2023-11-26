@@ -13,17 +13,30 @@ export async function getServerSideProps(context) {
   const { query } = context;
   const genre = query.genre || "fetchTrending";
 
-  const request = await fetch(`https://api.themoviedb.org/3/${genre === "fetchTopRated" ? "movie/top_rated" : "trending/all/week"}?api_key=${API_KEY}&language=en-US&page=1`);
-  if (!request.ok) {
-    throw new Error("Failed to fetch data");
+  try {
+    const request = await fetch(`https://api.themoviedb.org/3/${genre === "fetchTopRated" ? "movie/top_rated" : "trending/all/week"}?api_key=${API_KEY}&language=en-US&page=1`);
+    if (!request.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    const response = await request.json();
+
+    return {
+      props: {
+        list: response.results,
+        revalidate: 10
+      },
+    };
+  } catch (error) { 
+    if (context.res) {
+      context.res.writeHead(302, {
+        Location: '/_error',
+      });
+      context.res.end();
+    }
+
+    return {
+      props: { error: error.message },
+    };
   }
-
-  const response = await request.json();
-
-  return {
-    props: {
-      list: response.results,
-      revalidate: 10
-    },
-  };
 }
